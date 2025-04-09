@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { fromEvent, Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 interface Question {
   id: number;
@@ -34,17 +36,36 @@ interface SupplierAnswer {
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
-export class SupplierScoringComponent implements OnInit {
+export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestroy {
   questions: Question[] = [];
   suppliers: Supplier[] = [];
   overallQuestions: number = 0;
+  
+  @ViewChild('questionsContent') questionsContent!: ElementRef<HTMLElement>;
+  @ViewChild('suppliersContent') suppliersContent!: ElementRef<HTMLElement>;
+  @ViewChild('suppliersHeader') suppliersHeader!: ElementRef<HTMLElement>;
 
-  constructor() {
+  private isScrolling = false;
+  private destroy$ = new Subject<void>();
+
+  constructor(private ngZone: NgZone) {
     this.initializeData();
   }
 
   ngOnInit(): void {
-    this.setupScrollSync();
+    // Initialization logic
+  }
+  
+  ngAfterViewInit(): void {
+    // Wait for next tick to ensure DOM is ready
+    setTimeout(() => {
+      this.setupScrollSync();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initializeData(): void {
@@ -127,29 +148,76 @@ export class SupplierScoringComponent implements OnInit {
   }
 
   private setupScrollSync(): void {
-    const questionsContent = document.getElementById('questionsContent');
-    const suppliersContent = document.getElementById('suppliersContent');
-    let isScrolling = false;
-
-    const syncVerticalScroll = (source: HTMLElement, target: HTMLElement) => {
-      if (!isScrolling) {
-        isScrolling = true;
-        target.scrollTop = source.scrollTop;
-        setTimeout(() => {
-          isScrolling = false;
-        }, 50);
-      }
-    };
-
-    if (questionsContent && suppliersContent) {
-      questionsContent.addEventListener('scroll', () => {
-        syncVerticalScroll(questionsContent, suppliersContent);
-      });
-
-      suppliersContent.addEventListener('scroll', () => {
-        syncVerticalScroll(suppliersContent, questionsContent);
-      });
+    if (!this.questionsContent?.nativeElement || !this.suppliersContent?.nativeElement || !this.suppliersHeader?.nativeElement) {
+      return;
     }
+
+    this.ngZone.runOutsideAngular(() => {
+      let scrollTimeout: number;
+
+      const syncScroll = (source: HTMLElement, target: HTMLElement, isHorizontal = false) => {
+        if (this.isScrolling) return;
+        
+        this.isScrolling = true;
+        
+        if (isHorizontal) {
+          // For horizontal scroll, sync immediately
+          target.scrollLeft = source.scrollLeft;
+        } else {
+          // For vertical scroll, use ratio calculation
+          const sourceScrollRatio = source.scrollTop / (source.scrollHeight - source.clientHeight);
+          const targetScrollPosition = Math.round(sourceScrollRatio * (target.scrollHeight - target.clientHeight));
+          
+          if (target.scrollTop !== targetScrollPosition) {
+            target.scrollTop = targetScrollPosition;
+          }
+        }
+
+        // Clear any existing timeout
+        if (scrollTimeout) {
+          window.clearTimeout(scrollTimeout);
+        }
+        
+        // Set a new timeout to reset isScrolling
+        scrollTimeout = window.setTimeout(() => {
+          this.isScrolling = false;
+        }, 50);
+      };
+
+      // Questions scroll - vertical only
+      fromEvent(this.questionsContent.nativeElement, 'scroll')
+        .pipe(
+          takeUntil(this.destroy$),
+          debounceTime(5)
+        )
+        .subscribe(() => {
+          syncScroll(this.questionsContent.nativeElement, this.suppliersContent.nativeElement);
+        });
+
+      // Suppliers content scroll - both vertical and horizontal
+      fromEvent(this.suppliersContent.nativeElement, 'scroll')
+        .pipe(
+          takeUntil(this.destroy$),
+          debounceTime(5)
+        )
+        .subscribe(() => {
+          // Sync vertical scroll with questions
+          syncScroll(this.suppliersContent.nativeElement, this.questionsContent.nativeElement);
+          // Sync horizontal scroll with header immediately
+          this.suppliersHeader.nativeElement.scrollLeft = this.suppliersContent.nativeElement.scrollLeft;
+        });
+
+      // Suppliers header scroll - horizontal only
+      fromEvent(this.suppliersHeader.nativeElement, 'scroll')
+        .pipe(
+          takeUntil(this.destroy$),
+          debounceTime(5)
+        )
+        .subscribe(() => {
+          // Sync horizontal scroll with content immediately
+          this.suppliersContent.nativeElement.scrollLeft = this.suppliersHeader.nativeElement.scrollLeft;
+        });
+    });
   }
 
   onApplyForAllChange(question: Question): void {

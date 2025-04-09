@@ -19,19 +19,19 @@
 </div>
 
 <!-- Main Content -->
-<div class="content-container pb-5">
+<div class="content-container">
     <!-- Fixed Questions Column -->
     <div class="questions-column">
         <!-- Questions Header -->
         <div class="questions-header">
-            <div class="d-flex align-items-center">
+            <div class="overall-questions">
                 <div class="overall-count">{{overallQuestions}}</div>
                 <div>Overall Questions</div>
             </div>
         </div>
 
         <!-- Questions Content (scrollable) -->
-        <div class="questions-content" id="questionsContent">
+        <div class="questions-content" #questionsContent>
             <!-- Question Cards -->
             <div class="question-card" *ngFor="let question of questions">
                 <div class="d-flex">
@@ -57,7 +57,7 @@
     <!-- Scrollable Suppliers Container -->
     <div class="suppliers-container">
         <!-- Suppliers Header -->
-        <div class="suppliers-header" id="suppliersHeader">
+        <div class="suppliers-header" #suppliersHeader>
             <!-- Supplier Headers -->
             <div class="supplier-card-header" *ngFor="let supplier of suppliers">
                 <div class="supplier-header">
@@ -74,9 +74,9 @@
         </div>
 
         <!-- Suppliers Content Wrapper -->
-        <div class="suppliers-content-wrapper" id="suppliersContentWrapper">
+        <div class="suppliers-content-wrapper">
             <!-- Suppliers Content -->
-            <div class="suppliers-content" id="suppliersContent">
+            <div class="suppliers-content" #suppliersContent>
                 <!-- Supplier Answers -->
                 <div class="supplier-answers" *ngFor="let supplier of suppliers">
                     <div class="supplier-card" *ngFor="let answer of supplier.answers">

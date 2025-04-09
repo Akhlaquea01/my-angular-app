@@ -21,6 +21,7 @@ body {
     height: calc(100vh - 70px);
     overflow: hidden;
     position: relative;
+    background-color: #f8f9fa;
 }
 
 .questions-column {
@@ -32,25 +33,43 @@ body {
     flex-direction: column;
     position: relative;
     z-index: 2;
+    overflow: hidden;
 }
 
 .questions-header {
     background-color: white;
     padding: 15px;
     border-bottom: 1px solid #e9ecef;
-    flex: 0 0 auto;
+    flex: 0 0 90px;
     position: sticky;
     top: 0;
     z-index: 3;
+    display: flex;
+    align-items: center;
+}
+
+.overall-questions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.overall-count {
+    font-size: 2.5rem;
+    color: #e9ecef;
+    font-weight: bold;
 }
 
 .questions-content {
     flex: 1;
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
-    padding-right: 8px;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
+    padding: 15px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .suppliers-container {
@@ -60,19 +79,25 @@ body {
     overflow: hidden;
     min-width: 0;
     position: relative;
+    background-color: white;
 }
 
 .suppliers-header {
     display: flex;
     background-color: white;
-    padding: 0;
+    padding: 15px;
     border-bottom: 1px solid #e9ecef;
-    flex: 0 0 auto;
-    overflow-x: hidden;
+    flex: 0 0 90px;
+    overflow-x: auto;
     overflow-y: hidden;
     position: sticky;
     top: 0;
     z-index: 3;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .suppliers-content-wrapper {
@@ -82,20 +107,27 @@ body {
 }
 
 .suppliers-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    height: 100%;
     display: flex;
     overflow-x: auto;
-    overflow-y: scroll;
-    padding-right: 8px;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
+    overflow-y: auto;
+    padding: 15px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
-.supplier-card {
+.supplier-answers {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-height: min-content;
+    width: 340px;
+}
+
+.supplier-card, .question-card {
     min-width: 320px;
     max-width: 320px;
     margin: 0 10px 10px 0;
@@ -103,8 +135,10 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     padding: 15px;
-    height: 191px;
+    height: 200px;
     flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .supplier-card-header {
@@ -116,16 +150,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     padding: 15px;
     flex: 0 0 auto;
-}
-
-.question-card {
-    margin: 0 10px 10px 0;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    padding: 15px;
-    height: 191px;
-    flex: 0 0 auto;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .question-number {
@@ -191,7 +219,13 @@ body {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
-    min-height: 100px;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .score-input {
@@ -206,7 +240,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #e9ecef;
 }
 
 .comment-icon {
@@ -260,13 +296,6 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-.overall-count {
-    font-size: 4rem;
-    color: #e9ecef;
-    font-weight: bold;
-    margin-right: 15px;
-}
-
 .view-attachments {
     color: #007bff;
     text-decoration: underline;
@@ -285,41 +314,4 @@ input:checked + .slider:before {
     font-size: 0.8rem;
     color: #6c757d;
     margin-right: 10px;
-}
-
-.supplier-answers {
-    display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    min-height: min-content;
-}
-
-/* Update scrollbar styles for better visibility */
-.suppliers-content::-webkit-scrollbar,
-.questions-content::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.suppliers-content::-webkit-scrollbar-track,
-.questions-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.suppliers-content::-webkit-scrollbar-thumb,
-.questions-content::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.suppliers-content::-webkit-scrollbar-thumb:hover,
-.questions-content::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/* Hide scrollbar for Firefox */
-.suppliers-content,
-.questions-content {
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
 } 
