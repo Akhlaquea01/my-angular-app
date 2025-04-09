@@ -188,18 +188,15 @@ body {
 }
 
 .positive {
-    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
-        linear-gradient(90deg, #28a745 50%, #e0e0e0 50%);
+    background: #28a745;
 }
 
 .average {
-    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
-        linear-gradient(90deg, #ffc107 50%, #e0e0e0 50%);
+    background: #ffc107;
 }
 
 .negative {
-    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
-        linear-gradient(90deg, #dc3545 50%, #e0e0e0 50%);
+    background: #dc3545;
 }
 
 .supplier-header {
