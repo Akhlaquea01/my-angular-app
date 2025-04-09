@@ -1,0 +1,325 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    overflow: hidden;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.content-container {
+    display: flex;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+    position: relative;
+}
+
+.questions-column {
+    width: 360px;
+    flex: 0 0 360px;
+    background-color: white;
+    border-right: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+}
+
+.questions-header {
+    background-color: white;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.questions-content {
+    flex: 1;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.suppliers-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    position: relative;
+}
+
+.suppliers-header {
+    display: flex;
+    background-color: white;
+    padding: 0;
+    border-bottom: 1px solid #e9ecef;
+    flex: 0 0 auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.suppliers-content-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.suppliers-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: scroll;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.supplier-card {
+    min-width: 320px;
+    max-width: 320px;
+    margin: 0 10px 10px 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    height: 191px;
+    flex: 0 0 auto;
+}
+
+.supplier-card-header {
+    min-width: 320px;
+    max-width: 320px;
+    margin: 0 10px 0 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    flex: 0 0 auto;
+}
+
+.question-card {
+    margin: 0 10px 10px 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    height: 191px;
+    flex: 0 0 auto;
+}
+
+.question-number {
+    font-size: 2.5rem;
+    color: #e9ecef;
+    font-weight: bold;
+}
+
+.section-header {
+    padding: 10px 15px;
+    background-color: white;
+    font-weight: bold;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 10px;
+}
+
+.section-header i {
+    margin-right: 10px;
+}
+
+.score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: auto;
+}
+
+.positive {
+    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
+        linear-gradient(90deg, #28a745 50%, #e0e0e0 50%);
+}
+
+.average {
+    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
+        linear-gradient(90deg, #ffc107 50%, #e0e0e0 50%);
+}
+
+.negative {
+    background: linear-gradient(90deg, #e0e0e0 50%, transparent 50%),
+        linear-gradient(90deg, #dc3545 50%, #e0e0e0 50%);
+}
+
+.supplier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.supplier-info {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.answer-box {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    min-height: 100px;
+}
+
+.score-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.comment-icon {
+    color: #6c757d;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #28a745;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.overall-count {
+    font-size: 4rem;
+    color: #e9ecef;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.view-attachments {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.question-text {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.apply-for-all {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-right: 10px;
+}
+
+.supplier-answers {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-height: min-content;
+}
+
+/* Update scrollbar styles for better visibility */
+.suppliers-content::-webkit-scrollbar,
+.questions-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.suppliers-content::-webkit-scrollbar-track,
+.questions-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.suppliers-content::-webkit-scrollbar-thumb,
+.questions-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.suppliers-content::-webkit-scrollbar-thumb:hover,
+.questions-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Hide scrollbar for Firefox */
+.suppliers-content,
+.questions-content {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+} 

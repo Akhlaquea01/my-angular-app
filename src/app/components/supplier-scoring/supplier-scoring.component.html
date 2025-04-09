@@ -1,0 +1,99 @@
+<!-- Header -->
+<div class="header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">Score Suppliers at Question Level</h4>
+    <div class="search-container">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white border-right-0">
+                    <i class="fas fa-search text-muted"></i>
+                </span>
+            </div>
+            <input type="text" class="form-control border-left-0" placeholder="Search">
+        </div>
+    </div>
+</div>
+
+<!-- Section 1 -->
+<div class="section-header">
+    <i class="fas fa-chevron-down"></i> Section 1
+</div>
+
+<!-- Main Content -->
+<div class="content-container pb-5">
+    <!-- Fixed Questions Column -->
+    <div class="questions-column">
+        <!-- Questions Header -->
+        <div class="questions-header">
+            <div class="d-flex align-items-center">
+                <div class="overall-count">{{overallQuestions}}</div>
+                <div>Overall Questions</div>
+            </div>
+        </div>
+
+        <!-- Questions Content (scrollable) -->
+        <div class="questions-content" id="questionsContent">
+            <!-- Question Cards -->
+            <div class="question-card" *ngFor="let question of questions">
+                <div class="d-flex">
+                    <div class="question-number">{{question.id | number:'2.0-0'}}</div>
+                    <div class="ml-3 flex-grow-1">
+                        <div class="question-text">{{question.text}}</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="apply-for-all">
+                                Score Apply for all supplier
+                                <label class="switch ml-2">
+                                    <input type="checkbox" [(ngModel)]="question.applyForAll" (change)="onApplyForAllChange(question)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="score-input" [(ngModel)]="question.score">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Suppliers Container -->
+    <div class="suppliers-container">
+        <!-- Suppliers Header -->
+        <div class="suppliers-header" id="suppliersHeader">
+            <!-- Supplier Headers -->
+            <div class="supplier-card-header" *ngFor="let supplier of suppliers">
+                <div class="supplier-header">
+                    <div>
+                        <h5 class="mb-0">{{supplier.name}}</h5>
+                        <div class="supplier-info">{{supplier.code}} | Ans : {{supplier.answersCount}}/{{supplier.totalQuestions}}</div>
+                    </div>
+                    <div class="score-circle {{supplier.status}} d-flex flex-column">
+                        <span>{{supplier.score}}%</span>
+                        <span style="font-size: 0.7rem; font-weight: normal;">{{supplier.status | titlecase}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suppliers Content Wrapper -->
+        <div class="suppliers-content-wrapper" id="suppliersContentWrapper">
+            <!-- Suppliers Content -->
+            <div class="suppliers-content" id="suppliersContent">
+                <!-- Supplier Answers -->
+                <div class="supplier-answers" *ngFor="let supplier of suppliers">
+                    <div class="supplier-card" *ngFor="let answer of supplier.answers">
+                        <div class="answer-box">
+                            {{answer.answer}}
+                            <div class="view-attachments mt-2" *ngIf="answer.hasAttachments">View Attachments</div>
+                        </div>
+                        <div class="score-row">
+                            <div>Score</div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-comment-alt comment-icon"></i>
+                                <input type="text" class="score-input" [(ngModel)]="answer.score">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
