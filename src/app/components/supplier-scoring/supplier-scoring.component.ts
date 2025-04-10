@@ -19,6 +19,10 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
   sections: Section[] = [];
   suppliers: Supplier[] = [];
   currentSection: Section | null = null;
+  visibleQuestionsCount: number = 5;
+  isLoading: boolean = false;
+  loadedQuestions: any[] = [];
+  totalQuestionsInSection: number = 0;
   
   @ViewChild('suppliersContent') suppliersContent!: ElementRef<HTMLElement>;
   @ViewChild('suppliersHeader') suppliersHeader!: ElementRef<HTMLElement>;
@@ -38,17 +42,60 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
       overallScores: {}
     };
 
-    // Load data from service
+    // Load initial data without questions
+    this.loadInitialData();
+  }
+  
+  loadInitialData(): void {
+    this.isLoading = true;
+    
     this.supplierScoringService.getSupplierScoringData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         this.supplierData = data;
         this.sections = this.supplierData.sections.sort((a, b) => a.order - b.order);
         this.suppliers = this.supplierData.suppliers;
-        this.currentSection = this.sections[0];
+        
+        // Set the first section as current if available
+        if (this.sections.length > 0) {
+          this.currentSection = this.sections[0];
+          this.totalQuestionsInSection = this.currentSection.questions.length;
+          
+          // Load first batch of questions
+          this.loadQuestionsForSection(this.currentSection.id, 0, this.visibleQuestionsCount);
+        }
+        
+        this.isLoading = false;
       });
   }
   
+  loadQuestionsForSection(sectionId: string, offset: number, limit: number): void {
+    this.isLoading = true;
+    
+    // In a real API, this would fetch only the paginated questions
+    // For now, we'll simulate pagination by slicing the questions array
+    const section = this.sections.find(s => s.id === sectionId);
+    
+    if (section) {
+      // Simulate API delay
+      setTimeout(() => {
+        const paginatedQuestions = section.questions.slice(offset, offset + limit);
+        
+        // If this is the first load, replace the questions
+        if (offset === 0) {
+          this.loadedQuestions = paginatedQuestions;
+        } else {
+          // Otherwise, append the new questions
+          this.loadedQuestions = [...this.loadedQuestions, ...paginatedQuestions];
+        }
+        
+        this.isLoading = false;
+      }, 500); // Simulate network delay
+    } else {
+      this.isLoading = false;
+    }
+  }
+
   ngAfterViewInit(): void {
     // Wait for next tick to ensure DOM is ready
     setTimeout(() => {
@@ -121,7 +168,16 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleSection(section: Section) {
-    this.currentSection = this.currentSection?.id === section.id ? null : section;
+    if (this.currentSection?.id === section.id) {
+      this.currentSection = null;
+    } else {
+      this.currentSection = section;
+      this.totalQuestionsInSection = section.questions.length;
+      this.visibleQuestionsCount = 5;
+      
+      // Load first batch of questions for the new section
+      this.loadQuestionsForSection(section.id, 0, this.visibleQuestionsCount);
+    }
   }
 
   updateScore(questionId: string, supplierId: string, scoreValue: string) {
@@ -191,5 +247,36 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
 
   getTotalQuestions(): number {
     return this.sections.reduce((total, section) => total + section.questions.length, 0);
+  }
+
+  getVisibleQuestions(): any[] {
+    return this.loadedQuestions;
+  }
+
+  loadMoreQuestions(): void {
+    console.log('Loading more questions');
+    console.log('Before:', this.visibleQuestionsCount);
+    
+    if (this.currentSection) {
+      // Load more questions for the current section
+      this.loadQuestionsForSection(
+        this.currentSection.id, 
+        this.visibleQuestionsCount, 
+        5
+      );
+      
+      // Increase the visible count for the next load
+      this.visibleQuestionsCount += 5;
+      console.log('After:', this.visibleQuestionsCount);
+    }
+  }
+
+  hasMoreQuestions(): boolean {
+    if (!this.currentSection) return false;
+    const hasMore = this.visibleQuestionsCount < this.totalQuestionsInSection;
+    console.log('Has more questions:', hasMore);
+    console.log('Current visible:', this.visibleQuestionsCount);
+    console.log('Total available:', this.totalQuestionsInSection);
+    return hasMore;
   }
 } 

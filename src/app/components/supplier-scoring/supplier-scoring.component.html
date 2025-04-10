@@ -31,7 +31,7 @@
         <div class="questions-content">
             <div *ngFor="let section of sections">
                 <ng-container *ngIf="currentSection?.id === section.id">
-                    <div class="question-card" *ngFor="let question of section.questions">
+                    <div class="question-card" *ngFor="let question of getVisibleQuestions()">
                         <div class="question-header">
                             <div class="question-number">{{question.order}}</div>
                             <div class="question-text">{{question.text}}</div>
@@ -46,6 +46,15 @@
                             </div>
                             <input type="number" class="score-input" [max]="question.maxScore" [value]="0">
                         </div>
+                    </div>
+                    
+                    <!-- Load More Button - Moved outside the question card loop -->
+                    <div class="load-more-container" *ngIf="hasMoreQuestions()">
+                        <button class="load-more-btn" (click)="loadMoreQuestions()" [disabled]="isLoading">
+                            <i class="fas" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading" [class.fa-chevron-down]="!isLoading"></i>
+                            <span *ngIf="!isLoading">Show More ({{loadedQuestions.length}}/{{totalQuestionsInSection}})</span>
+                            <span *ngIf="isLoading">Loading...</span>
+                        </button>
                     </div>
                 </ng-container>
             </div>
@@ -74,7 +83,7 @@
             <div class="suppliers-content" #suppliersContent>
                 <div class="supplier-answers" *ngFor="let supplier of suppliers">
                     <ng-container *ngIf="currentSection">
-                        <div class="supplier-card" *ngFor="let question of currentSection.questions">
+                        <div class="supplier-card" *ngFor="let question of getVisibleQuestions()">
                             <div class="answer-box">
                                 {{(question.responses[supplier.id] || {}).answer || 'No answer provided'}}
                             </div>

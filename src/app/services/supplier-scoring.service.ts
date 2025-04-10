@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SupplierScoringResponse } from '../models/supplier-scoring.model';
+import { SupplierScoringResponse, Section } from '../models/supplier-scoring.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,31 @@ import { SupplierScoringResponse } from '../models/supplier-scoring.model';
 export class SupplierScoringService {
   constructor(private http: HttpClient) {}
 
-  getSupplierScoringData(): Observable<SupplierScoringResponse> {
-    return this.http.get<SupplierScoringResponse>('/assets/mock-data/supplier-scoring-example.json');
+  getSupplierScoringData(limit?: number, offset?: number, sectionId?: string): Observable<SupplierScoringResponse> {
+    let params = new HttpParams();
+    
+    if (limit !== undefined) {
+      params = params.set('limit', limit.toString());
+    }
+    
+    if (offset !== undefined) {
+      params = params.set('offset', offset.toString());
+    }
+    
+    if (sectionId) {
+      params = params.set('sectionId', sectionId);
+    }
+    
+    return this.http.get<SupplierScoringResponse>('/assets/mock-data/supplier-scoring-example.json', { params });
+  }
+  
+  // New method to get paginated questions for a specific section
+  getPaginatedQuestions(sectionId: string, limit: number = 5, offset: number = 0): Observable<Section> {
+    let params = new HttpParams()
+      .set('sectionId', sectionId)
+      .set('limit', limit.toString())
+      .set('offset', offset.toString());
+    
+    return this.http.get<Section>(`/assets/mock-data/supplier-scoring-example.json`, { params });
   }
 } 

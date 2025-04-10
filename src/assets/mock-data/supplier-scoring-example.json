@@ -6,6 +6,226 @@
       "order": 1,
       "questions": [
         {
+          "id": "q5-uuid-bb13f20e-a3d2-4b31-847c-8d5f9b390abc",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 5,
+          "text": "How do you manage project timelines and ensure on-time delivery? Describe your tracking mechanisms and risk mitigation strategies.",
+          "maxScore": 10,
+          "applyToAllSuppliers": true,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "We use Jira and Confluence to manage timelines and deliverables, with burndown charts and sprint retrospectives to track progress. Risks are managed through weekly checkpoints and buffer allocations.",
+              "score": 9
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Use Azure DevOps for tracking. Risk matrix and milestone charts updated weekly. Successfully maintained 95% on-time delivery across 20+ enterprise projects.",
+              "score": 8
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Implement Gantt charts, daily standups, and Slack-integrated reminders. Risk mitigation via proactive resourcing and client syncs. On-time for 12 of 13 past major rollouts.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q6-uuid-cf223bd7-5741-4c0d-bd1f-d729e354c0f2",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 6,
+          "text": "What is your approach to data security and compliance (e.g., GDPR, HIPAA)? Provide examples of how you've ensured data protection in past projects.",
+          "maxScore": 10,
+          "applyToAllSuppliers": false,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "We implement role-based access control, encrypted data at rest and in transit, and regular audits. Our healthcare client project complied with HIPAA and ISO 27001 standards.",
+              "score": 9
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Data encryption using AWS KMS, GDPR consent workflows, and SOC 2-aligned policies. Delivered GDPR-compliant SaaS platform for European telecom provider.",
+              "score": 10
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Token-based authentication and end-to-end encryption. Worked on fintech app with PCI-DSS level compliance, securing credit card data and PII.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q7-uuid-2a6c4d3f-6c3e-4a3b-bf18-283678abc123",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 7,
+          "text": "Describe your DevOps practices, including CI/CD tools and infrastructure automation techniques used in your projects.",
+          "maxScore": 10,
+          "applyToAllSuppliers": true,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "CI/CD pipelines built with GitLab CI and Docker, deployed to AWS using Terraform. Reduced release time from hours to minutes.",
+              "score": 9
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Jenkins-based CI/CD, Ansible for config management, and Helm charts on Kubernetes. Enabled blue/green deployments for zero-downtime releases.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Bitbucket pipelines with auto-deploy via Firebase and GitHub Actions. Scripts managed in Bash and YAML. Improved release reliability by 80%.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q8-uuid-1b2d3f4e-4c3a-9e8b-0cde-4567abcd9012",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 8,
+          "text": "Do you have experience with AI/ML integration? Provide project examples and tools/frameworks used.",
+          "maxScore": 10,
+          "applyToAllSuppliers": false,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "Integrated ML models using TensorFlow for product recommendation engine in retail platform. Boosted upsell rate by 30%.",
+              "score": 7
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Used AWS SageMaker to build fraud detection model for fintech client. Achieved 92% accuracy and integrated with real-time APIs.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Implemented NLP model using spaCy and Scikit-learn to analyze customer feedback. Deployed via FastAPI to web dashboard.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q9-uuid-34ab56cd-1d2e-4f3f-9e9d-8a7c456def01",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 9,
+          "text": "How do you ensure client collaboration and transparency throughout the project lifecycle?",
+          "maxScore": 10,
+          "applyToAllSuppliers": true,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "Clients have real-time access to Jira, weekly demos, and Slack channels. Feedback loops are built into every sprint cycle.",
+              "score": 9
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "We assign client success managers and maintain shared dashboards for KPIs. Bi-weekly roadmap reviews and stakeholder Q&As.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Daily syncs and Trello boards shared with clients. Transparent sprint burn-up charts and milestone trackers.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q10-uuid-5567c7de-3b41-4b1a-91ec-ff0123abc789",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 10,
+          "text": "Describe how you handle change management and scope creep during ongoing projects.",
+          "maxScore": 10,
+          "applyToAllSuppliers": false,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "Scope changes are evaluated via impact assessments. Approved changes are integrated into backlog with client signoff. Prioritization is re-aligned via sprint planning.",
+              "score": 8
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Formal change request process in place. PMO team handles documentation and risk evaluation. Agile buffer planning used to absorb approved changes.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "We conduct mid-sprint checkpoints for scope discussions. Adjustments tracked in ClickUp and updated in sprint retros.",
+              "score": 7
+            }
+          }
+        },
+        {
+          "id": "q11-uuid-b03a3dcf-c404-4ab2-90df-6789123eeabc",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 11,
+          "text": "Explain your experience with cross-platform development. What tools and frameworks do you use and why?",
+          "maxScore": 10,
+          "applyToAllSuppliers": true,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "We use React Native and Ionic for cross-platform mobile apps. Shared codebase helps reduce cost by 40%.",
+              "score": 8
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Flutter is our primary choice for its performance and UI flexibility. Used in 5+ multi-platform projects with consistent results.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Build apps with Xamarin and CapacitorJS. Chosen for its .NET integration and native plugin support. Delivered enterprise apps in telecom and logistics.",
+              "score": 8
+            }
+          }
+        },
+        {
+          "id": "q12-uuid-f889123a-7fd4-4c2c-b13e-20ef9012cd34",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 12,
+          "text": "What deployment strategies do you use to ensure minimal downtime and smooth rollouts?",
+          "maxScore": 10,
+          "applyToAllSuppliers": false,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "Blue/green and canary deployments via AWS CodeDeploy. Feature toggles for real-time control during releases.",
+              "score": 8
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Use Helm and Kubernetes for rolling deployments. Automated rollback policies in place for any anomalies.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Firebase hosting with CI-integrated staging flows. Manual QA gates before full production rollout.",
+              "score": 7
+            }
+          }
+        },
+        {
+          "id": "q13-uuid-e123456f-789a-4bcd-bf12-abc9012ef345",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 13,
+          "text": "How do you onboard and train new team members on client-specific tools, standards, and practices?",
+          "maxScore": 10,
+          "applyToAllSuppliers": true,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "We maintain onboarding documentation and internal wiki. Shadowing sessions and paired programming during first sprint.",
+              "score": 8
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Structured onboarding with mentor assignment, tool walkthroughs, and weekly check-ins during probation phase.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Onboarding checklist in Notion, team Q&A forums, and role-based access setup on day one.",
+              "score": 7
+            }
+          }
+        },
+        {
+          "id": "q14-uuid-cfbc123d-59fa-45c7-b8de-091234abc678",
+          "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
+          "order": 14,
+          "text": "What tools and metrics do you use to monitor system performance and user behavior post-deployment?",
+          "maxScore": 10,
+          "applyToAllSuppliers": false,
+          "responses": {
+            "sup1-uuid-3c5d2a4f-9cb1-d69e-a02c3b567890": {
+              "answer": "Use New Relic for performance monitoring and Google Analytics for user behavior tracking. Set up alerting for latency spikes.",
+              "score": 9
+            },
+            "sup2-uuid-5d2a4f9c-b1d6-9ea0-2c3b56789012": {
+              "answer": "Datadog and Grafana dashboards for system metrics. Mixpanel for user flows and funnel tracking.",
+              "score": 9
+            },
+            "sup3-uuid-2a4f9cb1-d69e-a02c-3b5678901234": {
+              "answer": "Firebase Performance and Crashlytics with custom dashboard built on Kibana for real-time analytics.",
+              "score": 8
+            }
+          }
+        },
+        {
           "id": "q1-uuid-7b3c5d2a-4f9c-b1d6-9ea02c3b5678",
           "sectionId": "8f7b3c1e-5d2a-4f9c-b1d6-9ea02c3b1234",
           "order": 1,
