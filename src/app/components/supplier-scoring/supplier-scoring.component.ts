@@ -148,75 +148,49 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private setupScrollSync(): void {
-    if (!this.questionsContent?.nativeElement || !this.suppliersContent?.nativeElement || !this.suppliersHeader?.nativeElement) {
+    if (!this.suppliersContent?.nativeElement || !this.suppliersHeader?.nativeElement) {
       return;
     }
 
     this.ngZone.runOutsideAngular(() => {
-      let scrollTimeout: number;
+      const content = this.suppliersContent.nativeElement;
+      const header = this.suppliersHeader.nativeElement;
+      let isScrolling = false;
 
-      const syncScroll = (source: HTMLElement, target: HTMLElement, isHorizontal = false) => {
-        if (this.isScrolling) return;
-        
-        this.isScrolling = true;
-        
-        if (isHorizontal) {
-          // For horizontal scroll, sync immediately
+      const syncScroll = (source: HTMLElement, target: HTMLElement) => {
+        if (!isScrolling) {
+          isScrolling = true;
           target.scrollLeft = source.scrollLeft;
-        } else {
-          // For vertical scroll, use ratio calculation
-          const sourceScrollRatio = source.scrollTop / (source.scrollHeight - source.clientHeight);
-          const targetScrollPosition = Math.round(sourceScrollRatio * (target.scrollHeight - target.clientHeight));
-          
-          if (target.scrollTop !== targetScrollPosition) {
-            target.scrollTop = targetScrollPosition;
-          }
+          requestAnimationFrame(() => {
+            isScrolling = false;
+          });
         }
-
-        // Clear any existing timeout
-        if (scrollTimeout) {
-          window.clearTimeout(scrollTimeout);
-        }
-        
-        // Set a new timeout to reset isScrolling
-        scrollTimeout = window.setTimeout(() => {
-          this.isScrolling = false;
-        }, 50);
       };
 
-      // Questions scroll - vertical only
-      fromEvent(this.questionsContent.nativeElement, 'scroll')
-        .pipe(
-          takeUntil(this.destroy$),
-          debounceTime(5)
-        )
-        .subscribe(() => {
-          syncScroll(this.questionsContent.nativeElement, this.suppliersContent.nativeElement);
-        });
+      // Sync content scroll to header
+      fromEvent(content, 'scroll').pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(() => {
+        syncScroll(content, header);
+      });
 
-      // Suppliers content scroll - both vertical and horizontal
-      fromEvent(this.suppliersContent.nativeElement, 'scroll')
-        .pipe(
-          takeUntil(this.destroy$),
-          debounceTime(5)
-        )
-        .subscribe(() => {
-          // Sync vertical scroll with questions
-          syncScroll(this.suppliersContent.nativeElement, this.questionsContent.nativeElement);
-          // Sync horizontal scroll with header immediately
-          this.suppliersHeader.nativeElement.scrollLeft = this.suppliersContent.nativeElement.scrollLeft;
-        });
+      // Sync header scroll to content
+      fromEvent(header, 'scroll').pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(() => {
+        syncScroll(header, content);
+      });
 
-      // Suppliers header scroll - horizontal only
-      fromEvent(this.suppliersHeader.nativeElement, 'scroll')
-        .pipe(
-          takeUntil(this.destroy$),
-          debounceTime(5)
-        )
-        .subscribe(() => {
-          // Sync horizontal scroll with content immediately
-          this.suppliersContent.nativeElement.scrollLeft = this.suppliersHeader.nativeElement.scrollLeft;
-        });
+      // Handle wheel events on header
+      fromEvent(header, 'wheel').pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((e: Event) => {
+        const wheelEvent = e as WheelEvent;
+        if (Math.abs(wheelEvent.deltaX) > Math.abs(wheelEvent.deltaY)) {
+          wheelEvent.preventDefault();
+          content.scrollLeft += wheelEvent.deltaX;
+        }
+      });
     });
   }
 

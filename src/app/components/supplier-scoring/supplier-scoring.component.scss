@@ -1,10 +1,11 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
-    overflow: hidden;
-    height: 100vh;
     margin: 0;
     padding: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .header {
@@ -18,10 +19,10 @@ body {
 
 .content-container {
     display: flex;
-    height: calc(100vh - 70px);
-    overflow: hidden;
+    min-height: calc(100vh - 70px);
     position: relative;
     background-color: #f8f9fa;
+    align-items: flex-start;
 }
 
 .questions-column {
@@ -33,7 +34,6 @@ body {
     flex-direction: column;
     position: relative;
     z-index: 2;
-    overflow: hidden;
 }
 
 .questions-header {
@@ -42,7 +42,7 @@ body {
     border-bottom: 1px solid #e9ecef;
     flex: 0 0 90px;
     position: sticky;
-    top: 0;
+    top: 70px;
     z-index: 3;
     display: flex;
     align-items: center;
@@ -52,6 +52,8 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .overall-count {
@@ -62,21 +64,15 @@ body {
 
 .questions-content {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
     padding: 15px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    display: flex;
+    flex-direction: column;
 }
 
 .suppliers-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     min-width: 0;
     position: relative;
     background-color: white;
@@ -88,49 +84,57 @@ body {
     padding: 15px;
     border-bottom: 1px solid #e9ecef;
     flex: 0 0 90px;
-    overflow-x: auto;
-    overflow-y: hidden;
     position: sticky;
-    top: 0;
+    top: 70px;
     z-index: 3;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    overflow-x: hidden;
+    overflow-y: hidden;
+    margin-bottom: 0;
+    align-items: center;
 }
 
 .suppliers-content-wrapper {
     flex: 1;
-    overflow: hidden;
     position: relative;
+    height: 100%;
+    min-height: 0;
+    margin-top: 0;
 }
 
 .suppliers-content {
-    height: 100%;
     display: flex;
-    overflow-x: auto;
-    overflow-y: auto;
     padding: 15px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    overflow-x: auto;
+    margin-top: 0;
 }
 
 .supplier-answers {
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 0 340px;
     flex-direction: column;
     min-height: min-content;
     width: 340px;
+    margin-right: 10px;
 }
 
-.supplier-card, .question-card {
+.supplier-card {
     min-width: 320px;
     max-width: 320px;
-    margin: 0 10px 10px 0;
+    margin: 0 15px 15px 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    height: 200px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.question-card {
+    min-width: 320px;
+    max-width: 320px;
+    margin: 0 0 15px 0;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -144,22 +148,26 @@ body {
 .supplier-card-header {
     min-width: 320px;
     max-width: 320px;
-    margin: 0 10px 0 0;
+    margin: 0 15px 15px 0;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     padding: 15px;
     flex: 0 0 auto;
-    height: 90px;
+    height: auto;
+    min-height: 90px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .question-number {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     color: #e9ecef;
     font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1;
+    opacity: 0.7;
 }
 
 .section-header {
@@ -175,8 +183,8 @@ body {
 }
 
 .score-circle {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -203,12 +211,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
+    width: 100%;
 }
 
 .supplier-info {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #6c757d;
+    margin-top: 5px;
+}
+
+.supplier-name {
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .answer-box {
@@ -238,7 +252,7 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-top: auto;
-    padding-top: 10px;
+    padding-top: 15px;
     border-top: 1px solid #e9ecef;
 }
 
@@ -302,7 +316,9 @@ input:checked + .slider:before {
 
 .question-text {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    line-height: 1.4;
 }
 
 .apply-for-all {
@@ -311,4 +327,36 @@ input:checked + .slider:before {
     font-size: 0.8rem;
     color: #6c757d;
     margin-right: 10px;
+}
+
+// Scrollbar styles for horizontal scrolling
+.suppliers-header::-webkit-scrollbar,
+.suppliers-content::-webkit-scrollbar {
+    height: 8px;
+}
+
+.suppliers-header::-webkit-scrollbar-thumb,
+.suppliers-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.suppliers-header::-webkit-scrollbar-track,
+.suppliers-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+// Firefox scrollbar styles
+@supports (scrollbar-width: thin) {
+    .suppliers-header,
+    .suppliers-content {
+        scrollbar-width: thin;
+        scrollbar-color: #c1c1c1 #f1f1f1;
+    }
+}
+
+// Ensure content wrapper takes full height
+.suppliers-content-wrapper {
+    height: 100%;
+    min-height: 0;
 } 
