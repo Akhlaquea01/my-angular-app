@@ -1,59 +1,52 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { fromEvent, Subject } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
-
-interface Question {
-  id: number;
-  text: string;
-  applyForAll: boolean;
-  score: number;
-}
-
-interface Supplier {
-  id: number;
-  name: string;
-  code: string;
-  answersCount: number;
-  totalQuestions: number;
-  score: number;
-  status: 'positive' | 'average' | 'negative';
-  answers: SupplierAnswer[];
-}
-
-interface SupplierAnswer {
-  questionId: number;
-  answer: string;
-  score: number;
-  hasAttachments: boolean;
-}
+import { takeUntil } from 'rxjs/operators';
+import { SupplierScoringResponse, Section, Supplier } from '../../models/supplier-scoring.model';
+import { SupplierScoringService } from '../../services/supplier-scoring.service';
 
 @Component({
   selector: 'app-supplier-scoring',
   templateUrl: './supplier-scoring.component.html',
   styleUrls: ['./supplier-scoring.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, HttpClientModule]
 })
 export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestroy {
-  questions: Question[] = [];
+  supplierData!: SupplierScoringResponse;
+  sections: Section[] = [];
   suppliers: Supplier[] = [];
-  overallQuestions: number = 0;
+  currentSection: Section | null = null;
   
-  @ViewChild('questionsContent') questionsContent!: ElementRef<HTMLElement>;
   @ViewChild('suppliersContent') suppliersContent!: ElementRef<HTMLElement>;
   @ViewChild('suppliersHeader') suppliersHeader!: ElementRef<HTMLElement>;
 
-  private isScrolling = false;
   private destroy$ = new Subject<void>();
 
-  constructor(private ngZone: NgZone) {
-    this.initializeData();
-  }
+  constructor(
+    private ngZone: NgZone,
+    private supplierScoringService: SupplierScoringService
+  ) {}
 
   ngOnInit(): void {
-    // Initialization logic
+    // Initialize with empty data structure
+    this.supplierData = {
+      sections: [],
+      suppliers: [],
+      overallScores: {}
+    };
+
+    // Load data from service
+    this.supplierScoringService.getSupplierScoringData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.supplierData = data;
+        this.sections = this.supplierData.sections.sort((a, b) => a.order - b.order);
+        this.suppliers = this.supplierData.suppliers;
+        this.currentSection = this.sections[0];
+      });
   }
   
   ngAfterViewInit(): void {
@@ -66,85 +59,6 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private initializeData(): void {
-    // Initialize questions
-    this.questions = [
-      {
-        id: 1,
-        text: 'What is your company\'s core expertise and primary product or service offerings?',
-        applyForAll: false,
-        score: 0
-      },
-      {
-        id: 2,
-        text: 'What is your company\'s core expertise and primary product or service offerings?',
-        applyForAll: true,
-        score: 0
-      },
-      {
-        id: 3,
-        text: 'What is your company\'s core expertise and primary product or service offerings?',
-        applyForAll: false,
-        score: 0
-      }
-    ];
-
-    // Initialize suppliers
-    this.suppliers = [
-      {
-        id: 1,
-        name: 'Supplier 1',
-        code: '12345678',
-        answersCount: 10,
-        totalQuestions: 10,
-        score: 80,
-        status: 'positive',
-        answers: this.generateAnswers(1)
-      },
-      {
-        id: 2,
-        name: 'Supplier 2',
-        code: '12345678',
-        answersCount: 10,
-        totalQuestions: 10,
-        score: 50,
-        status: 'average',
-        answers: this.generateAnswers(2)
-      },
-      {
-        id: 3,
-        name: 'Supplier 3',
-        code: '12345678',
-        answersCount: 10,
-        totalQuestions: 10,
-        score: 30,
-        status: 'negative',
-        answers: this.generateAnswers(3)
-      },
-      {
-        id: 4,
-        name: 'Supplier 4',
-        code: '12345678',
-        answersCount: 10,
-        totalQuestions: 10,
-        score: 75,
-        status: 'positive',
-        answers: this.generateAnswers(4)
-      }
-    ];
-
-    this.overallQuestions = this.questions.length;
-  }
-
-  private generateAnswers(supplierId: number): SupplierAnswer[] {
-    return this.questions.map(question => ({
-      questionId: question.id,
-      answer: `Our company specializes in [core expertise], and our primary products/services include [specific products or services]`,
-      score: 10,
-      hasAttachments: question.id === 3
-    }));
   }
 
   private setupScrollSync(): void {
@@ -194,56 +108,88 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
-  onApplyForAllChange(question: Question): void {
-    if (question.applyForAll) {
+  getScoreClass(score: number): string {
+    if (score >= 75) return 'positive';
+    if (score >= 50) return 'average';
+    return 'negative';
+  }
+
+  getScoreStatus(score: number): 'Positive' | 'Average' | 'Negative' {
+    if (score >= 75) return 'Positive';
+    if (score >= 50) return 'Average';
+    return 'Negative';
+  }
+
+  toggleSection(section: Section) {
+    this.currentSection = this.currentSection?.id === section.id ? null : section;
+  }
+
+  updateScore(questionId: string, supplierId: string, scoreValue: string) {
+    const score = parseInt(scoreValue, 10);
+    if (isNaN(score)) return;
+
+    const question = this.sections
+      .flatMap(s => s.questions)
+      .find(q => q.id === questionId);
+    
+    if (question) {
+      if (!question.responses[supplierId]) {
+        question.responses[supplierId] = {
+          id: `resp-${questionId}-${supplierId}`,
+          questionId,
+          supplierId,
+          score,
+          answer: '',
+          comments: [],
+          attachments: [],
+          lastUpdated: new Date().toISOString()
+        };
+      } else {
+        question.responses[supplierId].score = score;
+        question.responses[supplierId].lastUpdated = new Date().toISOString();
+      }
+
+      // Update overall scores
+      this.updateOverallScore(supplierId);
+    }
+  }
+
+  private updateOverallScore(supplierId: string) {
+    const supplierResponses = this.sections
+      .flatMap(s => s.questions)
+      .map(q => q.responses[supplierId])
+      .filter(r => r !== undefined);
+
+    const totalScore = supplierResponses.reduce((sum, response) => sum + response.score, 0);
+    const maxPossibleScore = this.sections.flatMap(s => s.questions).length * 10;
+    const percentage = Math.round((totalScore / maxPossibleScore) * 100);
+
+    this.supplierData.overallScores[supplierId] = {
+      score: totalScore,
+      status: this.getScoreStatus(percentage),
+      percentage
+    };
+
+    // Update supplier's current score
+    const supplier = this.suppliers.find(s => s.id === supplierId);
+    if (supplier) {
+      supplier.currentScore = percentage;
+    }
+  }
+
+  applyScoreToAll(questionId: string, score: number) {
+    const question = this.sections
+      .flatMap(s => s.questions)
+      .find(q => q.id === questionId);
+    
+    if (question && question.applyToAllSuppliers) {
       this.suppliers.forEach(supplier => {
-        const answer = supplier.answers.find(a => a.questionId === question.id);
-        if (answer) {
-          answer.score = question.score;
-        }
+        this.updateScore(questionId, supplier.id, score.toString());
       });
     }
   }
 
-  addQuestion(): void {
-    const newQuestion: Question = {
-      id: this.questions.length + 1,
-      text: `New question ${this.questions.length + 1}?`,
-      applyForAll: false,
-      score: 0
-    };
-
-    this.questions.push(newQuestion);
-    this.overallQuestions = this.questions.length;
-
-    // Add corresponding answers for each supplier
-    this.suppliers.forEach(supplier => {
-      supplier.answers.push({
-        questionId: newQuestion.id,
-        answer: 'No answer provided yet',
-        score: 0,
-        hasAttachments: false
-      });
-    });
-  }
-
-  addSupplier(): void {
-    const newSupplier: Supplier = {
-      id: this.suppliers.length + 1,
-      name: `Supplier ${this.suppliers.length + 1}`,
-      code: '12345678',
-      answersCount: 0,
-      totalQuestions: this.questions.length,
-      score: 0,
-      status: 'average',
-      answers: this.questions.map(question => ({
-        questionId: question.id,
-        answer: 'No answer provided yet',
-        score: 0,
-        hasAttachments: false
-      }))
-    };
-
-    this.suppliers.push(newSupplier);
+  getTotalQuestions(): number {
+    return this.sections.reduce((total, section) => total + section.questions.length, 0);
   }
 } 

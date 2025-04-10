@@ -87,10 +87,14 @@ body {
     position: sticky;
     top: 70px;
     z-index: 3;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-x: hidden;//to hide scroll of suppleir header cards
     margin-bottom: 0;
     align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .suppliers-content-wrapper {
@@ -106,6 +110,21 @@ body {
     padding: 15px;
     overflow-x: auto;
     margin-top: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
 }
 
 .supplier-answers {
@@ -161,13 +180,33 @@ body {
     justify-content: center;
 }
 
+.question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
 .question-number {
-    font-size: 3.5rem;
+    font-size: 2rem;
     color: #e9ecef;
     font-weight: bold;
-    margin-bottom: 15px;
     line-height: 1;
     opacity: 0.7;
+    flex-shrink: 0;
+    min-width: 32px;
+}
+
+.question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    max-height: 5.6em;
+    margin-top: 4px;
 }
 
 .section-header {
@@ -232,10 +271,18 @@ body {
     margin-bottom: 10px;
     flex: 1;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-height: 120px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    scrollbar-width: thin;
     &::-webkit-scrollbar {
-        display: none;
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #ced4da;
+        border-radius: 4px;
     }
 }
 
@@ -312,13 +359,6 @@ input:checked + .slider:before {
     text-decoration: underline;
     cursor: pointer;
     font-size: 0.9rem;
-}
-
-.question-text {
-    font-weight: bold;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    line-height: 1.4;
 }
 
 .apply-for-all {

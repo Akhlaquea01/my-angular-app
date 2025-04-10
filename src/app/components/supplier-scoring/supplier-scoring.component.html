@@ -20,78 +20,73 @@
 
 <!-- Main Content -->
 <div class="content-container">
-    <!-- Fixed Questions Column -->
+    <!-- Questions Column -->
     <div class="questions-column">
-        <!-- Questions Header -->
         <div class="questions-header">
             <div class="overall-questions">
-                <div class="overall-count">{{overallQuestions}}</div>
-                <div>Overall Questions</div>
+                <span class="overall-count">{{getTotalQuestions()}}</span>
+                <span>Overall Questions</span>
             </div>
         </div>
-
-        <!-- Questions Content (scrollable) -->
-        <div class="questions-content" #questionsContent>
-            <!-- Question Cards -->
-            <div class="question-card" *ngFor="let question of questions">
-                <div class="d-flex">
-                    <div class="question-number">{{question.id | number:'2.0-0'}}</div>
-                    <div class="ml-3 flex-grow-1">
-                        <div class="question-text">{{question.text}}</div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="apply-for-all">
-                                Score Apply for all supplier
-                                <label class="switch ml-2">
-                                    <input type="checkbox" [(ngModel)]="question.applyForAll" (change)="onApplyForAllChange(question)">
+        <div class="questions-content">
+            <div *ngFor="let section of sections">
+                <ng-container *ngIf="currentSection?.id === section.id">
+                    <div class="question-card" *ngFor="let question of section.questions">
+                        <div class="question-header">
+                            <div class="question-number">{{question.order}}</div>
+                            <div class="question-text">{{question.text}}</div>
+                        </div>
+                        <div class="score-row">
+                            <div class="apply-for-all" *ngIf="question.applyToAllSuppliers">
+                                <label class="switch">
+                                    <input type="checkbox" (change)="applyScoreToAll(question.id, 10)">
                                     <span class="slider"></span>
                                 </label>
+                                <span>Apply for all supplier</span>
                             </div>
-                            <input type="text" class="score-input" [(ngModel)]="question.score">
+                            <input type="number" class="score-input" [max]="question.maxScore" [value]="0">
                         </div>
                     </div>
-                </div>
+                </ng-container>
             </div>
         </div>
     </div>
 
-    <!-- Scrollable Suppliers Container -->
+    <!-- Suppliers Container -->
     <div class="suppliers-container">
-        <!-- Suppliers Header -->
         <div class="suppliers-header" #suppliersHeader>
-            <!-- Supplier Headers -->
-            <div class="supplier-card-header" *ngFor="let supplier of suppliers">
-                <div class="supplier-header">
-                    <div>
-                        <h5 class="mb-0">{{supplier.name}}</h5>
-                        <div class="supplier-info">{{supplier.code}} | Ans : {{supplier.answersCount}}/{{supplier.totalQuestions}}</div>
-                    </div>
-                    <div class="score-circle {{supplier.status}} d-flex flex-column">
-                        <span>{{supplier.score}}%</span>
-                        <span style="font-size: 0.7rem; font-weight: normal;">{{supplier.status | titlecase}}</span>
+            <div class="supplier-answers" *ngFor="let supplier of suppliers">
+                <div class="supplier-card-header">
+                    <div class="supplier-header">
+                        <div>
+                            <div class="supplier-name">{{supplier.name}}</div>
+                            <div class="supplier-info">{{supplier.code}} | Ans : {{supplier.totalAnswers}}/{{getTotalQuestions()}}</div>
+                        </div>
+                        <div class="score-circle" [ngClass]="getScoreClass(supplier.currentScore)">
+                            {{supplier.currentScore}}%
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Suppliers Content Wrapper -->
         <div class="suppliers-content-wrapper">
-            <!-- Suppliers Content -->
             <div class="suppliers-content" #suppliersContent>
-                <!-- Supplier Answers -->
                 <div class="supplier-answers" *ngFor="let supplier of suppliers">
-                    <div class="supplier-card" *ngFor="let answer of supplier.answers">
-                        <div class="answer-box">
-                            {{answer.answer}}
-                            <div class="view-attachments mt-2" *ngIf="answer.hasAttachments">View Attachments</div>
-                        </div>
-                        <div class="score-row">
-                            <div>Score</div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-comment-alt comment-icon"></i>
-                                <input type="text" class="score-input" [(ngModel)]="answer.score">
+                    <ng-container *ngIf="currentSection">
+                        <div class="supplier-card" *ngFor="let question of currentSection.questions">
+                            <div class="answer-box">
+                                {{(question.responses[supplier.id] || {}).answer || 'No answer provided'}}
+                            </div>
+                            <div class="score-row">
+                                <i class="fas fa-comment comment-icon"></i>
+                                <input type="number" class="score-input" 
+                                    [max]="question.maxScore"
+                                    [value]="(question.responses[supplier.id] || {}).score || 0"
+                                    (input)="updateScore(question.id, supplier.id, $any($event.target).value)">
                             </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div>
             </div>
         </div>
