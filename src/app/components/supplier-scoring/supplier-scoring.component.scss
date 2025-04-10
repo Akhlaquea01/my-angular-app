@@ -391,30 +391,30 @@ input:checked + .slider:before {
 }
 
 // Scrollbar styles for horizontal scrolling
-.suppliers-header::-webkit-scrollbar,
-.suppliers-content::-webkit-scrollbar {
-    height: 8px;
-}
+// .suppliers-header::-webkit-scrollbar,
+// .suppliers-content::-webkit-scrollbar {
+//     height: 8px;
+// }
 
-.suppliers-header::-webkit-scrollbar-thumb,
-.suppliers-content::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
+// .suppliers-header::-webkit-scrollbar-thumb,
+// .suppliers-content::-webkit-scrollbar-thumb {
+//     background: #c1c1c1;
+//     border-radius: 4px;
+// }
 
-.suppliers-header::-webkit-scrollbar-track,
-.suppliers-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
+// .suppliers-header::-webkit-scrollbar-track,
+// .suppliers-content::-webkit-scrollbar-track {
+//     background: #f1f1f1;
+// }
 
-// Firefox scrollbar styles
-@supports (scrollbar-width: thin) {
-    .suppliers-header,
-    .suppliers-content {
-        scrollbar-width: thin;
-        scrollbar-color: #c1c1c1 #f1f1f1;
-    }
-}
+// // Firefox scrollbar styles
+// @supports (scrollbar-width: thin) {
+//     .suppliers-header,
+//     .suppliers-content {
+//         scrollbar-width: thin;
+//         scrollbar-color: #c1c1c1 #f1f1f1;
+//     }
+// }
 
 // Ensure content wrapper takes full height
 .suppliers-content-wrapper {
@@ -478,5 +478,35 @@ input:checked + .slider:before {
 
     i {
         font-size: 0.8rem;
+    }
+}
+
+.view-updates-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1);
+
+    &:hover {
+        background-color: #218838;
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.15);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+    }
+
+    i {
+        font-size: 0.9rem;
     }
 } 

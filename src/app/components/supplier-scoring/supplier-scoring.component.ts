@@ -23,6 +23,7 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
   isLoading: boolean = false;
   loadedQuestions: any[] = [];
   totalQuestionsInSection: number = 0;
+  updatedScores: Map<string, Map<string, number>> = new Map(); // questionId -> (supplierId -> score)
   
   @ViewChild('suppliersContent') suppliersContent!: ElementRef<HTMLElement>;
   @ViewChild('suppliersHeader') suppliersHeader!: ElementRef<HTMLElement>;
@@ -182,7 +183,12 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
 
   updateScore(questionId: string, supplierId: string, scoreValue: string) {
     const score = parseInt(scoreValue, 10);
-    if (isNaN(score)) return;
+    
+    // Update the score in our tracking Map
+    if (!this.updatedScores.has(questionId)) {
+      this.updatedScores.set(questionId, new Map());
+    }
+    this.updatedScores.get(questionId)?.set(supplierId, score);
 
     const question = this.sections
       .flatMap(s => s.questions)
@@ -207,7 +213,60 @@ export class SupplierScoringComponent implements OnInit, AfterViewInit, OnDestro
 
       // Update overall scores
       this.updateOverallScore(supplierId);
+      
+      // Log the update
+      this.logScoreUpdate(questionId, supplierId, score);
     }
+  }
+
+  private logScoreUpdate(questionId: string, supplierId: string, score: number) {
+    const question = this.sections
+      .flatMap(s => s.questions)
+      .find(q => q.id === questionId);
+    
+    const supplier = this.suppliers.find(s => s.id === supplierId);
+    
+    console.log('Score Updated:', {
+      timestamp: new Date().toISOString(),
+      question: {
+        id: questionId,
+        text: question?.text,
+        sectionId: question?.sectionId
+      },
+      supplier: {
+        id: supplierId,
+        name: supplier?.name
+      },
+      score: score,
+      overallScore: this.supplierData.overallScores[supplierId]
+    });
+  }
+
+  getAllUpdatedData(): any {
+    const updatedData = {
+      timestamp: new Date().toISOString(),
+      sections: this.sections,
+      suppliers: this.suppliers,
+      overallScores: this.supplierData.overallScores,
+      scoreUpdates: Array.from(this.updatedScores.entries()).map(([questionId, supplierScores]) => ({
+        questionId,
+        question: this.sections.flatMap(s => s.questions).find(q => q.id === questionId)?.text,
+        scores: Array.from(supplierScores.entries()).map(([supplierId, score]) => ({
+          supplierId,
+          supplierName: this.suppliers.find(s => s.id === supplierId)?.name,
+          score
+        }))
+      }))
+    };
+
+    console.log('Complete Updated Data:', updatedData);
+    return updatedData;
+  }
+
+  // Add a button click handler for the template
+  logAllUpdatedData(): void {
+    console.log('Getting all updated data...');
+    this.getAllUpdatedData();
   }
 
   private updateOverallScore(supplierId: string) {
